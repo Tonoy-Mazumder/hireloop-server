@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import 'dotenv/config'
 const app = express();
 const port = process.env.PORT || 5000;
@@ -55,6 +55,20 @@ app.get('/jobs', async (req, res) => {
     } catch (error) {
         res.status(500).send({
             message: "Failed to fetch jobs"
+        })
+    }
+})
+
+// delete 
+app.delete('/jobs/:id', async (req, res) => {
+    const id = req.params.id
+    const query = { _id: new ObjectId(id) }
+    try {
+        const result = await jobs.deleteOne(query)
+        res.send(result)
+    } catch (error) {
+        res.status(500).send({
+            message: "Failed to delete job"
         })
     }
 })
